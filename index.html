@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ITlabWIT</title>
+<meta name="theme-color" content="#2E4034">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ITlabWIT">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: #2E4034;
+  font-family: 'Work Sans', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cb-root {
+  --chalk: #2E4034;
+  --chalk-light: #3D5245;
+  --paper: #F3ECDA;
+  --card: #FFFCF5;
+  --ink-red: #B23A2E;
+  --ink-red-dark: #7C2620;
+  --pencil: #4A4536;
+  --border-cb: #CBB88F;
+  --text-cb: #2A281F;
+  --muted-cb: #7A7360;
+  color: var(--text-cb);
+  background: var(--paper);
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.cb-header {
+  background: var(--chalk);
+  color: #F3ECDA;
+  padding: env(safe-area-inset-top, 18px) 20px 0 20px;
+  position: sticky; top: 0; z-index: 20;
+}
+.cb-header h1 {
+  font-family: 'Fjalla One', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  margin: 12px 0 14px 0;
+  text-transform: uppercase;
+}
+
+.cb-tabs { display: flex; gap: 4px; }
+.cb-tab {
+  font-family: 'Fjalla One', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 9px 18px;
+  background: var(--chalk-light);
+  color: #D9D2BE;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  flex: 1;
+}
+.cb-tab.active { background: var(--paper); color: var(--text-cb); }
+
+.cb-body { padding: 20px; padding-bottom: 60px; min-height: 320px; position: relative; }
+.cb-section-title {
+  font-family: 'Fjalla One', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--pencil);
+  margin: 0 0 10px 0;
+  border-bottom: 1px solid var(--border-cb);
+  padding-bottom: 6px;
+}
+
+.cb-card {
+  background: var(--card);
+  border: 1px solid var(--border-cb);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.cb-btn {
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--pencil);
+  background: var(--card);
+  color: var(--text-cb);
+  cursor: pointer;
+}
+.cb-btn:hover { background: #EFE7D0; }
+.cb-btn:active { transform: scale(0.98); }
+.cb-btn-primary { background: var(--chalk); color: #F3ECDA; border-color: var(--chalk); }
+.cb-btn-primary:hover { background: var(--chalk-light); }
+.cb-btn-danger { background: var(--card); color: var(--ink-red-dark); border-color: var(--ink-red-dark); }
+.cb-btn-danger:hover { background: #F6E3E0; }
+.cb-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.cb-input, .cb-select, .cb-textarea {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 15px;
+  padding: 9px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-cb);
+  background: #fff;
+  color: var(--text-cb);
+  width: 100%;
+}
+.cb-textarea { min-height: 90px; resize: vertical; font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+.cb-label { font-size: 12px; color: var(--muted-cb); margin-bottom: 4px; display: block; font-weight: 600; }
+
+.cb-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.cb-chip {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 13px;
+  border-radius: 20px;
+  border: 1px solid var(--border-cb);
+  background: #fff;
+  color: var(--text-cb);
+  cursor: pointer;
+}
+.cb-chip.selected { background: var(--chalk); color: #F3ECDA; border-color: var(--chalk); }
+.cb-chip .cb-chip-sub { opacity: 0.7; font-size: 11px; margin-left: 4px; }
+
+.cb-list-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0; border-bottom: 1px solid var(--border-cb);
+  font-size: 13px;
+}
+.cb-list-row:last-child { border-bottom: none; }
+.cb-remove { color: var(--ink-red-dark); background: none; border: none; cursor: pointer; font-size: 18px; line-height: 1; padding: 4px 6px; }
+
+.cb-stamp {
+  width: 74px; height: 74px; border-radius: 50%;
+  border: 3px dashed var(--ink-red);
+  color: var(--ink-red);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transform: rotate(-7deg);
+  font-family: 'Fjalla One', sans-serif;
+  flex-shrink: 0;
+  background: rgba(178,58,46,0.04);
+}
+.cb-stamp .cb-stamp-score { font-size: 20px; line-height: 1; }
+.cb-stamp .cb-stamp-max { font-size: 10px; opacity: 0.8; }
+.cb-stamp-sm { width: 46px; height: 46px; border-width: 2px; }
+.cb-stamp-sm .cb-stamp-score { font-size: 13px; }
+.cb-stamp-sm .cb-stamp-max { font-size: 8px; }
+
+.cb-photo-box {
+  width: 100%; aspect-ratio: 4/3; max-height: 320px;
+  background: #EFE7D0; border: 1px dashed var(--border-cb); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
+}
+.cb-photo-box img, .cb-photo-box video { width: 100%; height: 100%; object-fit: cover; }
+.cb-photo-placeholder { color: var(--muted-cb); font-size: 13px; text-align: center; padding: 20px; }
+
+.cb-empty { color: var(--muted-cb); font-size: 13px; padding: 16px 0; text-align: center; }
+.cb-toast {
+  position: fixed; top: 16px; left: 50%; transform: translateX(-50%); background: var(--chalk); color: #F3ECDA;
+  padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
+  opacity: 0; transition: opacity 0.25s; pointer-events: none; z-index: 100; white-space: nowrap;
+}
+.cb-toast.show { opacity: 1; }
+
+.cb-record-row {
+  display: flex; align-items: center; gap: 12px; padding: 10px 0;
+  border-bottom: 1px solid var(--border-cb);
+}
+.cb-record-row:last-child { border-bottom: none; }
+.cb-record-info { flex: 1; min-width: 0; }
+.cb-record-name { font-weight: 600; font-size: 14px; }
+.cb-record-sub { font-size: 12px; color: var(--muted-cb); }
+
+.cb-modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; z-index: 200;
+}
+.cb-modal {
+  background: var(--card); border-radius: 10px; padding: 16px; max-width: 400px; width: 100%; max-height: 85vh; overflow: auto;
+}
+.cb-modal img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div class="cb-root">
+  <div class="cb-header">
+    <h1>ITlabWIT</h1>
+    <div class="cb-tabs" id="cbTabs"></div>
+  </div>
+  <div class="cb-body" id="cbBody"></div>
+</div>
+
+<script>
+// ---------- IndexedDB storage layer ----------
+var dbPromise = null;
+function idbOpen() {
+  if (dbPromise) return dbPromise;
+  dbPromise = new Promise(function(resolve, reject) {
+    var req = indexedDB.open('rollbook-db', 1);
+    req.onupgradeneeded = function() {
+      req.result.createObjectStore('kv');
+    };
+    req.onsuccess = function() { resolve(req.result); };
+    req.onerror = function() { reject(req.error); };
+  });
+  return dbPromise;
+}
+var storage = {
+  get: async function(key) {
+    var db = await idbOpen();
+    return new Promise(function(resolve, reject) {
+      var tx = db.transaction('kv', 'readonly');
+      var req = tx.objectStore('kv').get(key);
+      req.onsuccess = function() {
+        resolve(req.result === undefined ? null : { key: key, value: req.result });
+      };
+      req.onerror = function() { reject(req.error); };
+    });
+  },
+  set: async function(key, value) {
+    var db = await idbOpen();
+    return new Promise(function(resolve, reject) {
+      var tx = db.transaction('kv', 'readwrite');
+      tx.objectStore('kv').put(value, key);
+      tx.oncomplete = function() { resolve({ key: key, value: value }); };
+      tx.onerror = function() { reject(tx.error); };
+    });
+  },
+  delete: async function(key) {
+    var db = await idbOpen();
+    return new Promise(function(resolve, reject) {
+      var tx = db.transaction('kv', 'readwrite');
+      tx.objectStore('kv').delete(key);
+      tx.oncomplete = function() { resolve({ key: key, deleted: true }); };
+      tx.onerror = function() { reject(tx.error); };
+    });
+  }
+};
+
+// ---------- App ----------
+(function() {
+  var state = {
+    tab: 'grade',
+    roster: [],
+    activities: [],
+    recordsIndex: [],
+    selectedStudent: null,
+    selectedActivity: null,
+    capturedPhoto: null,
+    cameraStream: null
+  };
+
+  var tabsEl = document.getElementById('cbTabs');
+  var bodyEl = document.getElementById('cbBody');
+
+  function uid() { return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8); }
+
+  function showToast(msg) {
+    var existing = document.querySelector('.cb-toast');
+    if (existing) existing.remove();
+    var t = document.createElement('div');
+    t.className = 'cb-toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(function() { t.classList.add('show'); });
+    setTimeout(function() {
+      t.classList.remove('show');
+      setTimeout(function() { t.remove(); }, 300);
+    }, 1600);
+  }
+
+  async function loadAll() {
+    try {
+      var r = await storage.get('roster');
+      state.roster = r ? JSON.parse(r.value) : [];
+    } catch (e) { state.roster = []; }
+    try {
+      var a = await storage.get('activities');
+      state.activities = a ? JSON.parse(a.value) : [];
+    } catch (e) { state.activities = []; }
+    if (state.activities.length === 0) {
+      state.activities = [{ id: uid(), name: 'Class activity', max: 10 }];
+      await persistActivities();
+    }
+    try {
+      var idx = await storage.get('records-index');
+      state.recordsIndex = idx ? JSON.parse(idx.value) : [];
+    } catch (e) { state.recordsIndex = []; }
+    if (!state.selectedActivity && state.activities.length) state.selectedActivity = state.activities[0].id;
+    render();
+  }
+
+  async function persistRoster() {
+    try { await storage.set('roster', JSON.stringify(state.roster)); }
+    catch (e) { showToast("Couldn't save roster"); }
+  }
+  async function persistActivities() {
+    try { await storage.set('activities', JSON.stringify(state.activities)); }
+    catch (e) { showToast("Couldn't save activities"); }
+  }
+  async function persistIndex() {
+    try { await storage.set('records-index', JSON.stringify(state.recordsIndex)); }
+    catch (e) { showToast("Couldn't save records"); }
+  }
+
+  function render() {
+    renderTabs();
+    if (state.tab === 'setup') renderSetup();
+    else if (state.tab === 'grade') renderGrade();
+    else renderRecords();
+  }
+
+  function renderTabs() {
+    var tabs = [['grade', 'Score'], ['setup', 'Setup'], ['records', 'Records']];
+    tabsEl.innerHTML = '';
+    tabs.forEach(function(t) {
+      var b = document.createElement('button');
+      b.className = 'cb-tab' + (state.tab === t[0] ? ' active' : '');
+      b.textContent = t[1];
+      b.onclick = function() { state.tab = t[0]; stopCamera(); render(); };
+      tabsEl.appendChild(b);
+    });
+  }
+
+  function renderSetup() {
+    bodyEl.innerHTML =
+      '<div class="cb-section-title">Class roster</div>' +
+      '<div class="cb-card">' +
+        '<label class="cb-label">Paste names, one per line</label>' +
+        '<textarea class="cb-textarea" id="cbRosterPaste" placeholder="Juan Dela Cruz&#10;Maria Santos&#10;..."></textarea>' +
+        '<div style="margin-top:8px;"><button class="cb-btn cb-btn-primary" id="cbImportBtn">Import names</button></div>' +
+      '</div>' +
+      '<div class="cb-card" id="cbRosterList"></div>' +
+
+      '<div class="cb-section-title">Activities and max scores</div>' +
+      '<div class="cb-card">' +
+        '<div style="display:flex; gap:8px;">' +
+          '<input class="cb-input" id="cbActName" placeholder="Activity name" style="flex:2;">' +
+          '<input class="cb-input" id="cbActMax" placeholder="Max" type="number" min="1" style="flex:1;">' +
+          '<button class="cb-btn cb-btn-primary" id="cbAddActBtn">Add</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="cb-card" id="cbActList"></div>';
+
+    var rosterList = bodyEl.querySelector('#cbRosterList');
+    if (state.roster.length === 0) {
+      rosterList.innerHTML = '<div class="cb-empty">No students yet. Paste a class list above.</div>';
+    } else {
+      rosterList.innerHTML = '';
+      state.roster.forEach(function(name, i) {
+        var row = document.createElement('div');
+        row.className = 'cb-list-row';
+        row.innerHTML = '<span>' + escapeHtml(name) + '</span>';
+        var rm = document.createElement('button');
+        rm.className = 'cb-remove';
+        rm.textContent = '\u2715';
+        rm.onclick = function() {
+          state.roster.splice(i, 1);
+          if (state.selectedStudent === name) state.selectedStudent = null;
+          persistRoster();
+          renderSetup();
+        };
+        row.appendChild(rm);
+        rosterList.appendChild(row);
+      });
+    }
+
+    var actList = bodyEl.querySelector('#cbActList');
+    if (state.activities.length === 0) {
+      actList.innerHTML = '<div class="cb-empty">No activities yet.</div>';
+    } else {
+      actList.innerHTML = '';
+      state.activities.forEach(function(act, i) {
+        var row = document.createElement('div');
+        row.className = 'cb-list-row';
+        row.innerHTML = '<span>' + escapeHtml(act.name) + ' <span style="font-family:\'IBM Plex Mono\',monospace;color:var(--muted-cb)">/ ' + act.max + '</span></span>';
+        var rm = document.createElement('button');
+        rm.className = 'cb-remove';
+        rm.textContent = '\u2715';
+        rm.onclick = function() {
+          state.activities.splice(i, 1);
+          if (state.selectedActivity === act.id) state.selectedActivity = state.activities.length ? state.activities[0].id : null;
+          persistActivities();
+          renderSetup();
+        };
+        row.appendChild(rm);
+        actList.appendChild(row);
+      });
+    }
+
+    bodyEl.querySelector('#cbImportBtn').onclick = function() {
+      var raw = bodyEl.querySelector('#cbRosterPaste').value;
+      var names = raw.split('\n').map(function(s) { return s.trim(); }).filter(Boolean);
+      names.forEach(function(n) {
+        if (state.roster.indexOf(n) === -1) state.roster.push(n);
+      });
+      persistRoster();
+      renderSetup();
+    };
+
+    bodyEl.querySelector('#cbAddActBtn').onclick = function() {
+      var name = bodyEl.querySelector('#cbActName').value.trim();
+      var max = parseFloat(bodyEl.querySelector('#cbActMax').value);
+      if (!name || !max || max <= 0) { showToast('Enter a name and max score'); return; }
+      state.activities.push({ id: uid(), name: name, max: max });
+      persistActivities();
+      renderSetup();
+    };
+  }
+
+  function renderGrade() {
+    if (state.roster.length === 0 || state.activities.length === 0) {
+      bodyEl.innerHTML = '<div class="cb-empty">Add students and at least one activity in Setup first.</div>';
+      return;
+    }
+    if (!state.selectedActivity) state.selectedActivity = state.activities[0].id;
+    var currentAct = state.activities.filter(function(a) { return a.id === state.selectedActivity; })[0];
+
+    bodyEl.innerHTML =
+      '<div class="cb-section-title">Activity</div>' +
+      '<div class="cb-chip-row" id="cbActChips" style="margin-bottom:16px;"></div>' +
+
+      '<div class="cb-section-title">Student</div>' +
+      '<div class="cb-chip-row" id="cbStudentChips" style="margin-bottom:16px;"></div>' +
+
+      '<div class="cb-section-title">Photo evidence</div>' +
+      '<div class="cb-card">' +
+        '<div class="cb-photo-box" id="cbPhotoBox"><span class="cb-photo-placeholder">No photo yet</span></div>' +
+        '<div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">' +
+          '<button class="cb-btn" id="cbCameraBtn">Open camera</button>' +
+          '<button class="cb-btn" id="cbSnapBtn" style="display:none;">Capture</button>' +
+          '<label class="cb-btn" style="margin:0;">Upload photo<input type="file" accept="image/*" id="cbUploadInput" style="display:none;"></label>' +
+          '<button class="cb-btn cb-btn-danger" id="cbClearPhotoBtn" style="display:none;">Remove</button>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="cb-section-title">Score <span style="font-family:\'IBM Plex Mono\',monospace;text-transform:none;">(out of ' + (currentAct ? currentAct.max : '-') + ')</span></div>' +
+      '<div class="cb-card">' +
+        '<div style="display:flex; align-items:center; gap:10px;">' +
+          '<input type="number" class="cb-input" id="cbScoreInput" min="0" max="' + (currentAct ? currentAct.max : 100) + '" step="0.5" style="max-width:110px;">' +
+          '<button class="cb-btn" id="cbFullBtn">Full</button>' +
+          '<button class="cb-btn" id="cbZeroBtn">Zero</button>' +
+        '</div>' +
+        '<label class="cb-label" style="margin-top:10px;">Note (optional)</label>' +
+        '<input class="cb-input" id="cbNoteInput" placeholder="e.g. good use of loops">' +
+        '<div style="margin-top:12px;">' +
+          '<button class="cb-btn cb-btn-primary" id="cbSaveBtn" style="width:100%;">Save score</button>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="cb-section-title">Just recorded</div>' +
+      '<div id="cbRecentList"></div>';
+
+    var actChips = bodyEl.querySelector('#cbActChips');
+    state.activities.forEach(function(a) {
+      var chip = document.createElement('button');
+      chip.className = 'cb-chip' + (a.id === state.selectedActivity ? ' selected' : '');
+      chip.innerHTML = escapeHtml(a.name) + '<span class="cb-chip-sub">/' + a.max + '</span>';
+      chip.onclick = function() { state.selectedActivity = a.id; renderGrade(); };
+      actChips.appendChild(chip);
+    });
+
+    var studentChips = bodyEl.querySelector('#cbStudentChips');
+    state.roster.forEach(function(name) {
+      var chip = document.createElement('button');
+      chip.className = 'cb-chip' + (name === state.selectedStudent ? ' selected' : '');
+      chip.textContent = name;
+      chip.onclick = function() { state.selectedStudent = name; renderGrade(); };
+      studentChips.appendChild(chip);
+    });
+
+    var photoBox = bodyEl.querySelector('#cbPhotoBox');
+    var snapBtn = bodyEl.querySelector('#cbSnapBtn');
+    var camBtn = bodyEl.querySelector('#cbCameraBtn');
+    var clearBtn = bodyEl.querySelector('#cbClearPhotoBtn');
+    if (state.capturedPhoto) {
+      photoBox.innerHTML = '<img src="' + state.capturedPhoto + '">';
+      clearBtn.style.display = '';
+    } else {
+      photoBox.innerHTML = '<span class="cb-photo-placeholder">No photo yet</span>';
+      clearBtn.style.display = 'none';
+    }
+
+    camBtn.onclick = startCamera;
+    snapBtn.onclick = capturePhoto;
+    clearBtn.onclick = function() { state.capturedPhoto = null; stopCamera(); renderGrade(); };
+
+    bodyEl.querySelector('#cbUploadInput').onchange = function(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        compressImage(ev.target.result, function(dataUrl) {
+          state.capturedPhoto = dataUrl;
+          stopCamera();
+          renderGrade();
+        });
+      };
+      reader.readAsDataURL(file);
+    };
+
+    var scoreInput = bodyEl.querySelector('#cbScoreInput');
+    bodyEl.querySelector('#cbFullBtn').onclick = function() { scoreInput.value = currentAct.max; };
+    bodyEl.querySelector('#cbZeroBtn').onclick = function() { scoreInput.value = 0; };
+
+    bodyEl.querySelector('#cbSaveBtn').onclick = function() {
+      saveRecord(currentAct, scoreInput.value, bodyEl.querySelector('#cbNoteInput').value);
+    };
+
+    renderRecentList(currentAct);
+  }
+
+  function renderRecentList(currentAct) {
+    var list = bodyEl.querySelector('#cbRecentList');
+    if (!list) return;
+    var recent = state.recordsIndex
+      .filter(function(r) { return r.activityId === currentAct.id; })
+      .sort(function(a, b) { return b.ts - a.ts; })
+      .slice(0, 6);
+    if (recent.length === 0) {
+      list.innerHTML = '<div class="cb-empty">No scores recorded for this activity yet.</div>';
+      return;
+    }
+    list.innerHTML = '';
+    recent.forEach(function(r) {
+      var row = document.createElement('div');
+      row.className = 'cb-record-row';
+      row.innerHTML =
+        '<div class="cb-stamp cb-stamp-sm"><div class="cb-stamp-score">' + r.score + '</div><div class="cb-stamp-max">/' + r.max + '</div></div>' +
+        '<div class="cb-record-info">' +
+          '<div class="cb-record-name">' + escapeHtml(r.student) + '</div>' +
+          '<div class="cb-record-sub">' + new Date(r.ts).toLocaleTimeString() + (r.note ? ' \u00b7 ' + escapeHtml(r.note) : '') + '</div>' +
+        '</div>';
+      list.appendChild(row);
+    });
+  }
+
+  async function saveRecord(act, scoreRaw, note) {
+    if (!state.selectedStudent) { showToast('Pick a student first'); return; }
+    var score = parseFloat(scoreRaw);
+    if (isNaN(score)) { showToast('Enter a score'); return; }
+    if (score < 0) score = 0;
+    if (score > act.max) score = act.max;
+
+    var id = uid();
+    var record = {
+      id: id,
+      student: state.selectedStudent,
+      activityId: act.id,
+      activityName: act.name,
+      max: act.max,
+      score: score,
+      note: (note || '').trim(),
+      ts: Date.now(),
+      hasPhoto: !!state.capturedPhoto
+    };
+
+    var saveBtn = bodyEl.querySelector('#cbSaveBtn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+
+    try {
+      if (state.capturedPhoto) {
+        await storage.set('photo:' + id, state.capturedPhoto);
+      }
+      state.recordsIndex.push(record);
+      await persistIndex();
+      showToast('Saved: ' + state.selectedStudent + ' - ' + score + '/' + act.max);
+      state.capturedPhoto = null;
+      stopCamera();
+      renderGrade();
+    } catch (e) {
+      showToast("Couldn't save. Try again.");
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save score';
+    }
+  }
+
+  async function startCamera() {
+    var photoBox = bodyEl.querySelector('#cbPhotoBox');
+    var snapBtn = bodyEl.querySelector('#cbSnapBtn');
+    var camBtn = bodyEl.querySelector('#cbCameraBtn');
+    try {
+      state.cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      var video = document.createElement('video');
+      video.autoplay = true;
+      video.playsInline = true;
+      video.srcObject = state.cameraStream;
+      photoBox.innerHTML = '';
+      photoBox.appendChild(video);
+      snapBtn.style.display = '';
+      camBtn.style.display = 'none';
+    } catch (e) {
+      showToast("Can't access camera. Try upload instead.");
+    }
+  }
+
+  function capturePhoto() {
+    var video = bodyEl.querySelector('#cbPhotoBox video');
+    if (!video) return;
+    var canvas = document.createElement('canvas');
+    var w = video.videoWidth || 640;
+    var h = video.videoHeight || 480;
+    var scale = Math.min(1, 800 / w);
+    canvas.width = w * scale;
+    canvas.height = h * scale;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    state.capturedPhoto = canvas.toDataURL('image/jpeg', 0.7);
+    stopCamera();
+    renderGrade();
+  }
+
+  function stopCamera() {
+    if (state.cameraStream) {
+      state.cameraStream.getTracks().forEach(function(t) { t.stop(); });
+      state.cameraStream = null;
+    }
+  }
+
+  function compressImage(dataUrl, cb) {
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var scale = Math.min(1, 800 / img.width);
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      cb(canvas.toDataURL('image/jpeg', 0.7));
+    };
+    img.src = dataUrl;
+  }
+
+  function renderRecords() {
+    bodyEl.innerHTML =
+      '<div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">' +
+        '<select class="cb-select" id="cbFilterStudent" style="flex:1; min-width:130px;"><option value="">All students</option></select>' +
+        '<select class="cb-select" id="cbFilterActivity" style="flex:1; min-width:130px;"><option value="">All activities</option></select>' +
+      '</div>' +
+      '<button class="cb-btn" id="cbExportBtn" style="width:100%; margin-bottom:14px;">Export CSV</button>' +
+      '<div class="cb-card" id="cbRecordsList"></div>';
+
+    var studentSel = bodyEl.querySelector('#cbFilterStudent');
+    state.roster.forEach(function(n) {
+      var o = document.createElement('option');
+      o.value = n; o.textContent = n;
+      studentSel.appendChild(o);
+    });
+    var actSel = bodyEl.querySelector('#cbFilterActivity');
+    state.activities.forEach(function(a) {
+      var o = document.createElement('option');
+      o.value = a.id; o.textContent = a.name;
+      actSel.appendChild(o);
+    });
+
+    function draw() {
+      var sf = studentSel.value, af = actSel.value;
+      var rows = state.recordsIndex
+        .filter(function(r) { return (!sf || r.student === sf) && (!af || r.activityId === af); })
+        .sort(function(a, b) { return b.ts - a.ts; });
+      var list = bodyEl.querySelector('#cbRecordsList');
+      if (rows.length === 0) {
+        list.innerHTML = '<div class="cb-empty">No records match this filter.</div>';
+        return;
+      }
+      list.innerHTML = '';
+      rows.forEach(function(r) {
+        var row = document.createElement('div');
+        row.className = 'cb-record-row';
+        var thumbHtml = r.hasPhoto ? '<div style="width:46px;height:46px;border-radius:6px;border:1px solid var(--border-cb);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;color:var(--muted-cb);" data-view="' + r.id + '">View</div>' : '<div style="width:46px;"></div>';
+        row.innerHTML =
+          '<div class="cb-stamp cb-stamp-sm"><div class="cb-stamp-score">' + r.score + '</div><div class="cb-stamp-max">/' + r.max + '</div></div>' +
+          '<div class="cb-record-info">' +
+            '<div class="cb-record-name">' + escapeHtml(r.student) + '</div>' +
+            '<div class="cb-record-sub">' + escapeHtml(r.activityName) + ' \u00b7 ' + new Date(r.ts).toLocaleString() + (r.note ? ' \u00b7 ' + escapeHtml(r.note) : '') + '</div>' +
+          '</div>' +
+          thumbHtml +
+          '<button class="cb-remove" data-del="' + r.id + '">\u2715</button>';
+        list.appendChild(row);
+      });
+      Array.prototype.forEach.call(list.querySelectorAll('[data-view]'), function(el) {
+        el.onclick = function() { viewPhoto(el.getAttribute('data-view')); };
+      });
+      Array.prototype.forEach.call(list.querySelectorAll('[data-del]'), function(el) {
+        el.onclick = function() { deleteRecord(el.getAttribute('data-del')); };
+      });
+    }
+
+    studentSel.onchange = draw;
+    actSel.onchange = draw;
+    bodyEl.querySelector('#cbExportBtn').onclick = exportCsv;
+    draw();
+  }
+
+  async function viewPhoto(id) {
+    try {
+      var res = await storage.get('photo:' + id);
+      if (!res) { showToast('Photo not found'); return; }
+      var overlay = document.createElement('div');
+      overlay.className = 'cb-modal-backdrop';
+      overlay.innerHTML =
+        '<div class="cb-modal">' +
+          '<img src="' + res.value + '">' +
+          '<button class="cb-btn" style="width:100%;" id="cbCloseModal">Close</button>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      overlay.querySelector('#cbCloseModal').onclick = function() { overlay.remove(); };
+      overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+    } catch (e) {
+      showToast("Couldn't load photo");
+    }
+  }
+
+  async function deleteRecord(id) {
+    state.recordsIndex = state.recordsIndex.filter(function(r) { return r.id !== id; });
+    await persistIndex();
+    try { await storage.delete('photo:' + id); } catch (e) {}
+    renderRecords();
+    showToast('Record deleted');
+  }
+
+  function exportCsv() {
+    var header = ['Student', 'Activity', 'Score', 'Max', 'Note', 'Timestamp'];
+    var lines = [header.join(',')];
+    state.recordsIndex.forEach(function(r) {
+      var row = [r.student, r.activityName, r.score, r.max, (r.note || '').replace(/,/g, ';'), new Date(r.ts).toISOString()];
+      lines.push(row.map(function(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(','));
+    });
+    var blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'scores.csv';
+    a.click();
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  loadAll();
+})();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').catch(function() {});
+  });
+}
+</script>
+</body>
+</html>
